@@ -66,7 +66,7 @@ const PriceList = () => {
 	useEffect(() => {
 		const fetchPriceList = async () => {
 			try {
-				const response = await axios.get<IPriceList>('/priceList')
+				const response = await axios.get<IPriceList>('/api/priceList')
 				const selectedLeg =
 					response.data.legs.find(({ routeInfo: { from, to } }) => {
 						return from.name === origin && to.name === destination

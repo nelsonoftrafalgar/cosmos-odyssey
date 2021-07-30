@@ -46,7 +46,7 @@ const ReservationModal: FC<IProps> = ({
 			formData.append('lastName', lastName)
 			formData.append('priceListId', priceListId)
 
-			axios.post('/reservations', formData, {
+			axios.post('/api/reservations', formData, {
 				headers: { 'Content-Type': 'multipart/form-data' },
 			})
 

@@ -39,8 +39,19 @@ class Reservations(db.Model):
         self.firstName = firstName
         self.lastName = lastName
 
+    def to_json(self):
+        return {
+            'identifier': self.identifier,
+            'route': self.route,
+            'price': self.price,
+            'travelTime': self.travelTime,
+            'companyName': self.companyName,
+            'firstName': self.firstName,
+            'lastName': self.lastName,
+        }
 
-@app.route('/priceList')
+
+@app.route('/api/priceList')
 @cross_origin()
 def price_list():
     url = 'https://cosmos-odyssey.azurewebsites.net/api/v1.0/TravelPrices'
@@ -63,12 +74,25 @@ def price_list():
     return data
 
 
-@app.route('/reservations', methods=['POST'])
+@app.route('/api/reservations', methods=['POST'])
 def reservations():
     entry = Reservations(*request.form.values())
     db.session.add(entry)
     db.session.commit()
     return jsonify(success=True)
+
+
+@app.route('/api/reservationHistory')
+def reservationHistory():
+    reservations = Reservations.query.join(PriceLists,
+                                           Reservations.identifier == PriceLists.identifier).all()
+    expired_reservations = Reservations.query.join(PriceLists,
+                                                   Reservations.identifier == PriceLists.identifier, isouter=True).filter(PriceLists.identifier == None).all()
+    for i in expired_reservations:
+        db.session.delete(i)
+    db.session.commit()
+
+    return jsonify([i.to_json() for i in reservations])
 
 
 @app.route('/')
