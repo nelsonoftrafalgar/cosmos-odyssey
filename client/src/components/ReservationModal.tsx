@@ -1,11 +1,13 @@
 import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from 'react'
 
 import { ICellValues } from './PriceList'
+import axios from 'axios'
 
 interface IProps extends ICellValues {
 	closeModal: Dispatch<SetStateAction<ICellValues | null>>
 	origin: string
 	destination: string
+	priceListId: string
 }
 
 const ReservationModal: FC<IProps> = ({
@@ -15,6 +17,7 @@ const ReservationModal: FC<IProps> = ({
 	closeModal,
 	origin,
 	destination,
+	priceListId,
 }) => {
 	const [firstName, setFirstName] = useState('')
 	const [lastName, setLastName] = useState('')
@@ -34,14 +37,19 @@ const ReservationModal: FC<IProps> = ({
 		} else if (!firstName || !lastName) {
 			setValidationErrorMessage('First and last name is required')
 		} else {
-			console.log({
-				route: `${origin}-${destination}`,
-				price,
-				travelTime,
-				companyName,
-				firstName,
-				lastName,
+			const formData = new FormData()
+			formData.append('route', `${origin}-${destination}`)
+			formData.append('price', `${price}`)
+			formData.append('travelTime', `${travelTime}`)
+			formData.append('companyName', companyName)
+			formData.append('firstName', firstName)
+			formData.append('lastName', lastName)
+			formData.append('priceListId', priceListId)
+
+			axios.post('/reservations', formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
 			})
+
 			setSubmitSuccessful(true)
 		}
 	}

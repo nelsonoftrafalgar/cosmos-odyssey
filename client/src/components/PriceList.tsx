@@ -36,7 +36,7 @@ interface ILeg {
 
 interface IPriceList {
 	id: string
-	validUntil: Date
+	validUntil: string
 	legs: ILeg[]
 }
 
@@ -51,11 +51,15 @@ export interface ICellValues {
 	travelTime: number
 }
 
+interface IPriceListState {
+	selectedLeg: ILeg | null
+	validUntil: string
+	priceListId: string
+}
+
 const PriceList = () => {
 	const { origin, destination } = useParams<IParams>()
-	const [priceList, setPriceList] = useState<{ selectedLeg: ILeg | null; validUntil: Date } | null>(
-		null
-	)
+	const [priceList, setPriceList] = useState<IPriceListState | null>(null)
 	const [reservation, setReservation] = useState<ICellValues | null>(null)
 	const [displayRefreshModal, setDisplayRefreshModal] = useState(false)
 
@@ -68,9 +72,8 @@ const PriceList = () => {
 						return from.name === origin && to.name === destination
 					}) || null
 
-				const validUntil = response.data.validUntil
-
-				setPriceList({ selectedLeg, validUntil })
+				const { validUntil, id: priceListId } = response.data
+				setPriceList({ selectedLeg, validUntil, priceListId })
 			} catch (error) {
 				console.log('api error', error)
 			}
@@ -173,9 +176,10 @@ const PriceList = () => {
 				</tbody>
 			</table>
 			{displayRefreshModal && <RefreshModal />}
-			{reservation && (
+			{reservation && priceList && (
 				<ReservationModal
 					{...reservation}
+					priceListId={priceList.priceListId}
 					origin={origin}
 					destination={destination}
 					closeModal={setReservation}

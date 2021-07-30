@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 
@@ -18,6 +18,26 @@ class PriceLists(db.Model):
     def __init__(self, identifier, item):
         self.identifier = identifier
         self.item = item
+
+
+class Reservations(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    identifier = db.Column(db.String)
+    route = db.Column(db.String)
+    price = db.Column(db.String)
+    travelTime = db.Column(db.String)
+    companyName = db.Column(db.String)
+    firstName = db.Column(db.String)
+    lastName = db.Column(db.String)
+
+    def __init__(self, route, price, travelTime, companyName, firstName, lastName, identifier):
+        self.identifier = identifier
+        self.route = route
+        self.price = price
+        self.travelTime = travelTime
+        self.companyName = companyName
+        self.firstName = firstName
+        self.lastName = lastName
 
 
 @app.route('/priceList')
@@ -41,6 +61,14 @@ def price_list():
             db.session.commit()
 
     return data
+
+
+@app.route('/reservations', methods=['POST'])
+def reservations():
+    entry = Reservations(*request.form.values())
+    db.session.add(entry)
+    db.session.commit()
+    return jsonify(success=True)
 
 
 @app.route('/')
