@@ -1,7 +1,7 @@
 import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import Navigation from 'components/Navigation'
-import PriceList from 'components/PriceList'
+import { PriceList } from 'components/PriceList'
 import ReservationHistory from 'components/ReservationHistory'
 import RouteSelect from 'components/RouteSelect'
 

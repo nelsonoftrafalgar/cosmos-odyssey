@@ -1,11 +1,12 @@
 import { CellProps, useFilters, useSortBy, useTable } from 'react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
+import { Redirect, useParams } from 'react-router-dom'
 
 import Loader from 'components/Loader'
 import RefreshModal from 'components/RefreshModal'
 import ReservationModal from 'components/ReservationModal'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { travelRoutes } from 'api/travelRoutes'
 
 interface ILeg {
 	id: string
@@ -41,7 +42,7 @@ interface IPriceList {
 	legs: ILeg[]
 }
 
-interface IParams {
+export interface IParams {
 	origin: string
 	destination: string
 }
@@ -58,8 +59,12 @@ interface IPriceListState {
 	priceListId: string
 }
 
-const PriceList = () => {
-	const { origin, destination } = useParams<IParams>()
+interface IProps {
+	origin: string
+	destination: string
+}
+
+const PriceList: FC<IProps> = ({ origin, destination }) => {
 	const [priceList, setPriceList] = useState<IPriceListState | null>(null)
 	const [reservation, setReservation] = useState<ICellValues | null>(null)
 	const [displayRefreshModal, setDisplayRefreshModal] = useState(false)
@@ -213,4 +218,12 @@ const PriceList = () => {
 	)
 }
 
-export default PriceList
+const withParamsValidation = (Component: any) => () => {
+	const { origin, destination } = useParams<IParams>()
+	const validParams = origin in travelRoutes && destination in travelRoutes
+	return validParams ? <Component origin={origin} destination={destination} /> : <Redirect to='/' />
+}
+
+const validatedPriceList = withParamsValidation(PriceList)
+
+export { validatedPriceList as PriceList }
