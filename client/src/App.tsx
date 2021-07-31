@@ -1,4 +1,4 @@
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import { Redirect, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import Navigation from 'components/Navigation'
 import PriceList from 'components/PriceList'
@@ -20,6 +20,7 @@ const App = () => {
 					<Route exact path='/reservationHistory'>
 						<ReservationHistory />
 					</Route>
+					<Redirect to='/' />
 				</Switch>
 			</div>
 		</Router>

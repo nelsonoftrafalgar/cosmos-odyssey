@@ -1,10 +1,14 @@
 import requests
+import os
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 
+print('environment', os.environ.get('FLASK_ENV'))
+
 app = Flask(__name__, static_folder='client/build', static_url_path='')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/postgres' if os.environ.get(
+    'FLASK_ENV') == 'development' else os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 cors = CORS(app)
