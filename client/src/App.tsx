@@ -1,13 +1,15 @@
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
+import Navigation from 'components/Navigation'
 import PriceList from 'components/PriceList'
 import ReservationHistory from 'components/ReservationHistory'
 import RouteSelect from 'components/RouteSelect'
 
 const App = () => {
 	return (
-		<div className='app'>
-			<Router>
+		<Router>
+			<Navigation />
+			<div className='app'>
 				<Switch>
 					<Route exact path='/'>
 						<RouteSelect />
@@ -19,8 +21,8 @@ const App = () => {
 						<ReservationHistory />
 					</Route>
 				</Switch>
-			</Router>
-		</div>
+			</div>
+		</Router>
 	)
 }
 
