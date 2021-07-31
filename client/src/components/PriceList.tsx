@@ -1,4 +1,4 @@
-import { CellProps, useSortBy, useTable } from 'react-table'
+import { CellProps, useFilters, useSortBy, useTable } from 'react-table'
 import { useEffect, useMemo, useState } from 'react'
 
 import RefreshModal from './RefreshModal'
@@ -99,6 +99,16 @@ const PriceList = () => {
 			[priceList?.selectedLeg?.providers, priceList?.selectedLeg?.routeInfo.distance]
 		) || []
 
+	const CompanyFilter = (props: any) => {
+		const { filterValue, setFilter } = props.column
+		return (
+			<input
+				value={filterValue || ''}
+				onChange={(e) => setFilter(e.target.value || undefined)}
+				placeholder='Filter company'
+			/>
+		)
+	}
 	const columns: any = useMemo(() => {
 		const handleBooking = (companyName: string, price: number, travelTime: number) => () => {
 			if (new Date(priceList?.validUntil || '') < new Date()) setDisplayRefreshModal(true)
@@ -113,21 +123,28 @@ const PriceList = () => {
 			{
 				Header: 'Company',
 				accessor: 'companyName',
+				Filter: CompanyFilter,
+				disableSortBy: true,
 			},
 			{
 				Header: 'Price',
 				accessor: 'price',
+				disableFilters: true,
 			},
 			{
 				Header: 'Distance',
 				accessor: 'distance',
+				disableFilters: true,
 			},
 			{
 				Header: 'Travel Time',
 				accessor: 'travelTime',
+				disableFilters: true,
 			},
 			{
 				Header: 'Make reservation',
+				disableFilters: true,
+				disableSortBy: true,
 				Cell: ({
 					row: {
 						values: { companyName, price, travelTime },
@@ -144,6 +161,7 @@ const PriceList = () => {
 			columns,
 			data,
 		},
+		useFilters,
 		useSortBy
 	)
 
@@ -157,6 +175,7 @@ const PriceList = () => {
 								<th {...column.getHeaderProps(column.getSortByToggleProps())}>
 									{column.render('Header')}
 									<span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+									<div>{column.canFilter ? column.render('Filter') : null}</div>
 								</th>
 							))}
 						</tr>
