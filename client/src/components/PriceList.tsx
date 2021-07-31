@@ -1,6 +1,6 @@
 import { CellProps, useFilters, useSortBy, useTable } from 'react-table'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { Redirect, useParams } from 'react-router-dom'
+import { Redirect, useHistory, useParams } from 'react-router-dom'
 
 import Loader from 'components/Loader'
 import RefreshModal from 'components/RefreshModal'
@@ -65,6 +65,7 @@ interface IProps {
 }
 
 const PriceList: FC<IProps> = ({ origin, destination }) => {
+	const history = useHistory()
 	const [priceList, setPriceList] = useState<IPriceListState | null>(null)
 	const [reservation, setReservation] = useState<ICellValues | null>(null)
 	const [displayRefreshModal, setDisplayRefreshModal] = useState(false)
@@ -80,13 +81,13 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 
 				const { validUntil, id: priceListId } = response.data
 				setPriceList({ selectedLeg, validUntil, priceListId })
-			} catch (error) {
-				console.log('api error', error)
+			} catch {
+				history.replace('/error')
 			}
 		}
 
 		fetchPriceList()
-	}, [origin, destination])
+	}, [origin, destination, history])
 
 	const data =
 		useMemo(

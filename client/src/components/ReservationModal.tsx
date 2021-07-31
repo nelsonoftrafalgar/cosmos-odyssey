@@ -3,6 +3,7 @@ import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from '
 import { ICellValues } from 'components/PriceList'
 import Loader from 'components/Loader'
 import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 interface IProps extends ICellValues {
 	closeModal: Dispatch<SetStateAction<ICellValues | null>>
@@ -20,6 +21,7 @@ const ReservationModal: FC<IProps> = ({
 	destination,
 	priceListId,
 }) => {
+	const history = useHistory()
 	const [firstName, setFirstName] = useState('')
 	const [lastName, setLastName] = useState('')
 	const [submitSuccessful, setSubmitSuccessful] = useState(false)
@@ -56,9 +58,8 @@ const ReservationModal: FC<IProps> = ({
 
 				setIsSubmitting(false)
 				setSubmitSuccessful(true)
-			} catch (error) {
-				console.log('reservation submit error', error)
-				setIsSubmitting(false)
+			} catch {
+				history.replace('/error')
 			}
 		}
 	}

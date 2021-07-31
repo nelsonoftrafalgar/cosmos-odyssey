@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 
 import Loader from 'components/Loader'
 import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 const ReservationHistory = () => {
+	const history = useHistory()
 	const [reservationHistory, setReservationHistory] = useState(null)
 
 	useEffect(() => {
@@ -11,13 +13,13 @@ const ReservationHistory = () => {
 			try {
 				const response = await axios.get('/api/reservationHistory')
 				setReservationHistory(response.data)
-			} catch (error) {
-				console.log('reservation history api error')
+			} catch {
+				history.replace('/error')
 			}
 		}
 
 		getReservationHistory()
-	}, [])
+	}, [history])
 
 	if (!reservationHistory) {
 		return <Loader />
