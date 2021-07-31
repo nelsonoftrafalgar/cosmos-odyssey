@@ -1,8 +1,9 @@
 import { CellProps, useFilters, useSortBy, useTable } from 'react-table'
 import { useEffect, useMemo, useState } from 'react'
 
-import RefreshModal from './RefreshModal'
-import ReservationModal from './ReservationModal'
+import Loader from 'components/Loader'
+import RefreshModal from 'components/RefreshModal'
+import ReservationModal from 'components/ReservationModal'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 
@@ -164,6 +165,10 @@ const PriceList = () => {
 		useFilters,
 		useSortBy
 	)
+
+	if (!priceList) {
+		return <Loader />
+	}
 
 	return (
 		<div>

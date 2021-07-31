@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import Loader from 'components/Loader'
 import axios from 'axios'
 
 const ReservationHistory = () => {
@@ -17,6 +18,10 @@ const ReservationHistory = () => {
 
 		getReservationHistory()
 	}, [])
+
+	if (!reservationHistory) {
+		return <Loader />
+	}
 
 	return (
 		<div>

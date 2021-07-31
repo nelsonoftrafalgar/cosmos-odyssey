@@ -1,6 +1,7 @@
 import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from 'react'
 
-import { ICellValues } from './PriceList'
+import { ICellValues } from 'components/PriceList'
+import Loader from 'components/Loader'
 import axios from 'axios'
 
 interface IProps extends ICellValues {
@@ -23,8 +24,9 @@ const ReservationModal: FC<IProps> = ({
 	const [lastName, setLastName] = useState('')
 	const [submitSuccessful, setSubmitSuccessful] = useState(false)
 	const [validationErrorMessage, setValidationErrorMessage] = useState('')
+	const [isSubmitting, setIsSubmitting] = useState(false)
 
-	const handleFormSubmit = (e: FormEvent) => {
+	const handleFormSubmit = async (e: FormEvent) => {
 		e.preventDefault()
 		const pattern = /^[a-zA-Z\s]*$/
 		const isFirstNameValid = pattern.test(firstName)
@@ -46,11 +48,18 @@ const ReservationModal: FC<IProps> = ({
 			formData.append('lastName', lastName)
 			formData.append('priceListId', priceListId)
 
-			axios.post('/api/reservations', formData, {
-				headers: { 'Content-Type': 'multipart/form-data' },
-			})
+			setIsSubmitting(true)
+			try {
+				await axios.post('/api/reservations', formData, {
+					headers: { 'Content-Type': 'multipart/form-data' },
+				})
 
-			setSubmitSuccessful(true)
+				setIsSubmitting(false)
+				setSubmitSuccessful(true)
+			} catch (error) {
+				console.log('reservation submit error', error)
+				setIsSubmitting(false)
+			}
 		}
 	}
 
@@ -67,38 +76,40 @@ const ReservationModal: FC<IProps> = ({
 	return (
 		<div className='reservation-modal-wrapper'>
 			<div className='reservation-modal'>
-				{submitSuccessful ? (
-					<p>reservation successful</p>
-				) : (
-					<>
-						<p>
-							route: {origin} - {destination}
-						</p>
-						<p>price: {price}</p>
-						<p>travel time: {travelTime} days</p>
-						<p>company: {companyName}</p>
-						<form onSubmit={handleFormSubmit} className='reservation-form'>
-							<label>
-								<input
-									onChange={handleFirstNameChange}
-									value={firstName}
-									placeholder='First name'
-									type='text'
-								/>
-							</label>
-							<label>
-								<input
-									onChange={handleLastNameChange}
-									value={lastName}
-									placeholder='Last name'
-									type='text'
-								/>
-							</label>
-							<p>{validationErrorMessage}</p>
-							<button>Submit reservation</button>
-						</form>
-					</>
-				)}
+				{isSubmitting && <Loader />}
+				{!isSubmitting &&
+					(submitSuccessful ? (
+						<p>reservation successful</p>
+					) : (
+						<>
+							<p>
+								route: {origin} - {destination}
+							</p>
+							<p>price: {price}</p>
+							<p>travel time: {travelTime} days</p>
+							<p>company: {companyName}</p>
+							<form onSubmit={handleFormSubmit} className='reservation-form'>
+								<label>
+									<input
+										onChange={handleFirstNameChange}
+										value={firstName}
+										placeholder='First name'
+										type='text'
+									/>
+								</label>
+								<label>
+									<input
+										onChange={handleLastNameChange}
+										value={lastName}
+										placeholder='Last name'
+										type='text'
+									/>
+								</label>
+								<p>{validationErrorMessage}</p>
+								<button>Submit reservation</button>
+							</form>
+						</>
+					))}
 				<button onClick={() => closeModal(null)}>
 					{submitSuccessful ? 'Back to price list' : 'Cancel'}
 				</button>
