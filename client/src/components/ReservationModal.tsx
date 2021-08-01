@@ -80,18 +80,28 @@ const ReservationModal: FC<IProps> = ({
 				{isSubmitting && <Loader />}
 				{!isSubmitting &&
 					(submitSuccessful ? (
-						<p>reservation successful</p>
+						<p className='reservation-modal-success-message'>Reservation successful</p>
 					) : (
 						<>
-							<p>
-								route: {origin} - {destination}
+							<p className='reservation-modal-details'>
+								Route:{' '}
+								<span>
+									{origin} - {destination}
+								</span>
 							</p>
-							<p>price: {price}</p>
-							<p>travel time: {travelTime} days</p>
-							<p>company: {companyName}</p>
+							<p className='reservation-modal-details'>
+								Price: <span>{price}</span>
+							</p>
+							<p className='reservation-modal-details'>
+								Travel time: <span>{travelTime} days</span>
+							</p>
+							<p className='reservation-modal-details'>
+								Company: <span>{companyName}</span>
+							</p>
 							<form onSubmit={handleFormSubmit} className='reservation-form'>
 								<label>
 									<input
+										className='reservation-modal-input'
 										onChange={handleFirstNameChange}
 										value={firstName}
 										placeholder='First name'
@@ -100,18 +110,19 @@ const ReservationModal: FC<IProps> = ({
 								</label>
 								<label>
 									<input
+										className='reservation-modal-input'
 										onChange={handleLastNameChange}
 										value={lastName}
 										placeholder='Last name'
 										type='text'
 									/>
 								</label>
-								<p>{validationErrorMessage}</p>
-								<button>Submit reservation</button>
+								<p className='reservation-modal-validation-message'>{validationErrorMessage}</p>
+								<button className='reservation-modal-btn'>Submit reservation</button>
 							</form>
 						</>
 					))}
-				<button onClick={() => closeModal(null)}>
+				<button className='reservation-modal-btn' onClick={() => closeModal(null)}>
 					{submitSuccessful ? 'Back to price list' : 'Cancel'}
 				</button>
 			</div>

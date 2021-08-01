@@ -2,8 +2,10 @@ const RefreshModal = () => {
 	return (
 		<div className='refresh-modal-wrapper'>
 			<div className='refresh-modal'>
-				<p>the price list has expired</p>
-				<button onClick={() => window.location.reload()}>refresh price list</button>
+				<p>The price list has expired</p>
+				<button className='refresh-modal-btn' onClick={() => window.location.reload()}>
+					Refresh price list
+				</button>
 			</div>
 		</div>
 	)

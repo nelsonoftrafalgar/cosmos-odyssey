@@ -1,19 +1,11 @@
 .reservation-modal-wrapper {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: rgba(0, 0, 0, 0.75);
+	@include modal-wrapper;
 }
 
 .reservation-modal {
 	width: 300px;
 	border-radius: 5px;
-	background-color: #fff;
+	background-color: $white;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -26,10 +18,46 @@
 }
 
 .reservation-form {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
+	margin-bottom: 30px;
 
 	label {
 		margin-bottom: 10px;
 	}
+}
+
+.reservation-modal-input {
+	color: $light-violet;
+	padding: 5px;
+	margin-top: 5px;
+	border: 1px solid $grey;
+	border-radius: 5px;
+	width: 100%;
+}
+
+.reservation-modal-details {
+	align-self: flex-start;
+	color: $grey;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+
+	span {
+		color: $light-violet;
+	}
+}
+
+.reservation-modal-btn {
+	@include button;
+}
+
+.reservation-modal-validation-message {
+	color: $error-color;
+	font-size: 12px;
+}
+
+.reservation-modal-success-message {
+	color: $light-violet;
 }

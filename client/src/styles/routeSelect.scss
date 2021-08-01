@@ -1,39 +1,31 @@
 .route-select-wrapper {
-	width: 300px;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
-	border-radius: 5px;
-	box-shadow: 0px 0px 10px 0px #a8a6a6;
+	border-radius: $border-radius;
+	box-shadow: $box-shadow;
+
+	@media screen and (min-width: $breakpoint-sm) {
+		width: 300px;
+	}
 }
 
 .route-select-title {
 	text-align: center;
 	margin-bottom: 20px;
-	color: grey;
+	color: $light-violet;
 	font-size: 25px;
 }
 
 .route-select {
-	color: grey;
+	color: $light-violet;
 	margin-bottom: 20px;
 	padding: 10px;
-	border: 1px solid grey;
+	border: 1px solid $grey;
 	border-radius: 5px;
 }
 
 .route-select-button {
-	padding: 10px;
-	border-radius: 5px;
-	color: #fff;
-	background-color: #373163;
-	cursor: pointer;
-
-	&:hover {
-		background-color: #1d1842;
-	}
-
-	&:active {
-		opacity: 0.9;
-	}
+	@include button;
 }

@@ -1,0 +1,36 @@
+.reservation-history-wrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.reservation-history-title {
+	color: $light-violet;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.reservation-history-item {
+	border: 1px solid $grey;
+	border-radius: $border-radius;
+	padding: 5px;
+	width: 100%;
+	margin-bottom: 10px;
+
+	@media screen and (min-width: $breakpoint-sm) {
+		min-width: 300px;
+		width: unset;
+	}
+}
+
+.reservation-history-details {
+	color: $grey;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+
+	span {
+		color: $light-violet;
+	}
+}

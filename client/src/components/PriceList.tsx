@@ -22,18 +22,16 @@ interface ILeg {
 		}
 		distance: number
 	}
-	providers: [
-		{
+	providers: {
+		id: string
+		company: {
 			id: string
-			company: {
-				id: string
-				name: string
-			}
-			price: number
-			flightStart: string
-			flightEnd: string
+			name: string
 		}
-	]
+		price: number
+		flightStart: string
+		flightEnd: string
+	}[]
 }
 
 interface IPriceList {
@@ -113,6 +111,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 				value={filterValue || ''}
 				onChange={(e) => setFilter(e.target.value || undefined)}
 				placeholder='Filter company'
+				className='price-list-company-filter'
 			/>
 		)
 	}
@@ -157,7 +156,14 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 						values: { companyName, price, travelTime },
 					},
 				}: CellProps<ICellValues>) => {
-					return <button onClick={handleBooking(companyName, price, travelTime)}>book</button>
+					return (
+						<button
+							className='price-list-book-btn'
+							onClick={handleBooking(companyName, price, travelTime)}
+						>
+							book
+						</button>
+					)
 				},
 			},
 		]
@@ -177,7 +183,8 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 	}
 
 	return (
-		<div>
+		<div className='price-list-wrapper'>
+			<h1 className='price-list-title'>Price list</h1>
 			<table {...getTableProps()}>
 				<thead>
 					{headerGroups.map((headerGroup) => (
@@ -205,6 +212,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 					})}
 				</tbody>
 			</table>
+			{/* <pre>{JSON.stringify(priceList, undefined, 4)}</pre> */}
 			{displayRefreshModal && <RefreshModal />}
 			{reservation && priceList && (
 				<ReservationModal

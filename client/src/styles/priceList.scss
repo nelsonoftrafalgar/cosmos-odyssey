@@ -1,6 +1,7 @@
 table {
 	border-spacing: 0;
-	border: 1px solid black;
+	border: 1px solid $grey;
+	border-bottom: 0;
 
 	tr {
 		:last-child {
@@ -12,13 +13,42 @@ table {
 
 	th,
 	td {
-		margin: 0;
 		padding: 0.5rem;
-		border-bottom: 1px solid black;
-		border-right: 1px solid black;
+		border-bottom: 1px solid $grey;
+		border-right: 1px solid $grey;
+		color: $light-violet;
 
-		:last-child {
+		&:last-child {
 			border-right: 0;
 		}
 	}
+}
+
+.price-list-wrapper {
+	width: 100%;
+	display: block;
+	justify-content: center;
+	flex-direction: column;
+
+	@media screen and (min-width: $breakpoint-sm) {
+		display: flex;
+	}
+}
+
+.price-list-title {
+	color: $light-violet;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.price-list-company-filter {
+	color: $light-violet;
+	padding: 5px;
+	margin-top: 5px;
+	border: 1px solid $grey;
+	border-radius: 5px;
+}
+
+.price-list-book-btn {
+	@include button;
 }

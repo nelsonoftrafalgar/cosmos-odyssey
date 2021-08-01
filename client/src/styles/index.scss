@@ -1,4 +1,6 @@
+@import 'vars';
 @import 'layout';
+@import 'mixins';
 @import 'app';
 @import 'loader';
 @import 'navigation';
@@ -6,4 +8,5 @@
 @import 'priceList';
 @import 'reservationModal';
 @import 'refreshModal';
+@import 'reservationHistory';
 @import 'error';
