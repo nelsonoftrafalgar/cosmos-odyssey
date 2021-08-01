@@ -3,7 +3,10 @@ import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from '
 import { ICellValues } from 'components/PriceList'
 import Loader from 'components/Loader'
 import axios from 'axios'
+import { dictionary } from 'dictionary/dictionary'
 import { useHistory } from 'react-router-dom'
+
+const { reservationModal } = dictionary
 
 interface IProps extends ICellValues {
 	closeModal: Dispatch<SetStateAction<ICellValues | null>>
@@ -35,11 +38,11 @@ const ReservationModal: FC<IProps> = ({
 		const isLastNameValid = pattern.test(lastName)
 
 		if (!isFirstNameValid || !isLastNameValid) {
-			setValidationErrorMessage('First and last name must include only letters or spaces')
+			setValidationErrorMessage(reservationModal.validateChars)
 		} else if (firstName.length > 20 || lastName.length > 20) {
-			setValidationErrorMessage('First or last name must have max 20 chars')
+			setValidationErrorMessage(reservationModal.validateLenght)
 		} else if (!firstName || !lastName) {
-			setValidationErrorMessage('First and last name is required')
+			setValidationErrorMessage(reservationModal.validateRequired)
 		} else {
 			const formData = new FormData()
 			formData.append('route', `${origin}-${destination}`)
@@ -80,23 +83,23 @@ const ReservationModal: FC<IProps> = ({
 				{isSubmitting && <Loader />}
 				{!isSubmitting &&
 					(submitSuccessful ? (
-						<p className='reservation-modal-success-message'>Reservation successful</p>
+						<p className='reservation-modal-success-message'>{reservationModal.successMessage}</p>
 					) : (
 						<>
 							<p className='reservation-modal-details'>
-								Route:{' '}
+								{reservationModal.route}:{' '}
 								<span>
 									{origin} - {destination}
 								</span>
 							</p>
 							<p className='reservation-modal-details'>
-								Price: <span>{price}</span>
+								{reservationModal.price}: <span>{price}</span>
 							</p>
 							<p className='reservation-modal-details'>
-								Travel time: <span>{travelTime} days</span>
+								{reservationModal.travelTime}: <span>{travelTime} days</span>
 							</p>
 							<p className='reservation-modal-details'>
-								Company: <span>{companyName}</span>
+								{reservationModal.company}: <span>{companyName}</span>
 							</p>
 							<form onSubmit={handleFormSubmit} className='reservation-form'>
 								<label>
@@ -104,7 +107,7 @@ const ReservationModal: FC<IProps> = ({
 										className='reservation-modal-input'
 										onChange={handleFirstNameChange}
 										value={firstName}
-										placeholder='First name'
+										placeholder={reservationModal.firstName}
 										type='text'
 									/>
 								</label>
@@ -113,17 +116,17 @@ const ReservationModal: FC<IProps> = ({
 										className='reservation-modal-input'
 										onChange={handleLastNameChange}
 										value={lastName}
-										placeholder='Last name'
+										placeholder={reservationModal.lastName}
 										type='text'
 									/>
 								</label>
 								<p className='reservation-modal-validation-message'>{validationErrorMessage}</p>
-								<button className='reservation-modal-btn'>Submit reservation</button>
+								<button className='reservation-modal-btn'>{reservationModal.submit}</button>
 							</form>
 						</>
 					))}
 				<button className='reservation-modal-btn' onClick={() => closeModal(null)}>
-					{submitSuccessful ? 'Back to price list' : 'Cancel'}
+					{submitSuccessful ? reservationModal.back : reservationModal.cancel}
 				</button>
 			</div>
 		</div>

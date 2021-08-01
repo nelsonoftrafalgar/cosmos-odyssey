@@ -1,10 +1,14 @@
+import { dictionary } from 'dictionary/dictionary'
+
+const { refreshModal } = dictionary
+
 const RefreshModal = () => {
 	return (
 		<div className='refresh-modal-wrapper'>
 			<div className='refresh-modal'>
-				<p>The price list has expired</p>
+				<p>{refreshModal.message}</p>
 				<button className='refresh-modal-btn' onClick={() => window.location.reload()}>
-					Refresh price list
+					{refreshModal.button}
 				</button>
 			</div>
 		</div>

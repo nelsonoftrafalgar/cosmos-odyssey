@@ -1,7 +1,10 @@
 import { ChangeEvent, useState } from 'react'
 
+import { dictionary } from 'dictionary/dictionary'
 import { travelRoutes } from 'api/travelRoutes'
 import { useHistory } from 'react-router-dom'
+
+const { routeSelect } = dictionary
 
 const RouteSelect = () => {
 	const history = useHistory()
@@ -19,9 +22,9 @@ const RouteSelect = () => {
 
 	return (
 		<div className='route-select-wrapper'>
-			<h1 className='route-select-title'>Configure route</h1>
+			<h1 className='route-select-title'>{routeSelect.title}</h1>
 			<select className='route-select' onChange={handleChangeOrigin}>
-				<option value=''>select origin</option>
+				<option value=''>{routeSelect.selectOrigin}</option>
 				{Object.keys(travelRoutes).map((item) => (
 					<option key={item} value={item}>
 						{item}
@@ -30,7 +33,7 @@ const RouteSelect = () => {
 			</select>
 			{origin && (
 				<select className='route-select' onChange={(e) => setDestination(e.currentTarget.value)}>
-					<option value=''>select destination</option>
+					<option value=''>{routeSelect.selectDestination}</option>
 					{travelRoutes[origin].map((item) => (
 						<option key={item} value={item}>
 							{item}
@@ -40,7 +43,7 @@ const RouteSelect = () => {
 			)}
 			{origin && destination && (
 				<button onClick={handleSubmitRoute} className='route-select-button'>
-					Submit route
+					{routeSelect.submit}
 				</button>
 			)}
 		</div>

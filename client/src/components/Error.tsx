@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom'
+import { dictionary } from 'dictionary/dictionary'
+
+const { error } = dictionary
 
 const Error = () => {
 	return (
 		<div className='error-wrapper'>
-			<p className='error-message'>There has been an API error</p>
-			<Link to='/'>Go to home page</Link>
+			<p className='error-message'>{error.message}</p>
+			<Link to='/'>{error.link}</Link>
 		</div>
 	)
 }

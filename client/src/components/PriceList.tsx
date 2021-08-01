@@ -6,7 +6,10 @@ import Loader from 'components/Loader'
 import RefreshModal from 'components/RefreshModal'
 import ReservationModal from 'components/ReservationModal'
 import axios from 'axios'
+import { dictionary } from 'dictionary/dictionary'
 import { travelRoutes } from 'api/travelRoutes'
+
+const { priceList: dict } = dictionary
 
 interface ILeg {
 	id: string
@@ -127,28 +130,28 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 		}
 		return [
 			{
-				Header: 'Company',
+				Header: dict.company,
 				accessor: 'companyName',
 				Filter: CompanyFilter,
 				disableSortBy: true,
 			},
 			{
-				Header: 'Price',
+				Header: dict.price,
 				accessor: 'price',
 				disableFilters: true,
 			},
 			{
-				Header: 'Distance',
+				Header: dict.distance,
 				accessor: 'distance',
 				disableFilters: true,
 			},
 			{
-				Header: 'Travel Time',
+				Header: dict.travelTime,
 				accessor: 'travelTime',
 				disableFilters: true,
 			},
 			{
-				Header: 'Make reservation',
+				Header: dict.makeReservation,
 				disableFilters: true,
 				disableSortBy: true,
 				Cell: ({
@@ -161,7 +164,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 							className='price-list-book-btn'
 							onClick={handleBooking(companyName, price, travelTime)}
 						>
-							book
+							{dict.book}
 						</button>
 					)
 				},
@@ -184,7 +187,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 
 	return (
 		<div className='price-list-wrapper'>
-			<h1 className='price-list-title'>Price list</h1>
+			<h1 className='price-list-title'>{dict.title}</h1>
 			<table {...getTableProps()}>
 				<thead>
 					{headerGroups.map((headerGroup) => (
@@ -212,7 +215,6 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 					})}
 				</tbody>
 			</table>
-			{/* <pre>{JSON.stringify(priceList, undefined, 4)}</pre> */}
 			{displayRefreshModal && <RefreshModal />}
 			{reservation && priceList && (
 				<ReservationModal
