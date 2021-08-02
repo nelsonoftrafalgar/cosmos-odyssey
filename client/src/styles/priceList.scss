@@ -27,8 +27,9 @@ table {
 .price-list-wrapper {
 	width: 100%;
 	display: block;
-	justify-content: center;
+	// justify-content: center;
 	flex-direction: column;
+	min-height: inherit;
 
 	@media screen and (min-width: $breakpoint-sm) {
 		display: flex;

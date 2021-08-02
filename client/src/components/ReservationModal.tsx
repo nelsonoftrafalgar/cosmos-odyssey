@@ -1,10 +1,11 @@
 import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from 'react'
 
-import { ICellValues } from 'components/PriceList'
+import { ICellValues } from 'api/types'
 import Loader from 'components/Loader'
-import axios from 'axios'
 import { dictionary } from 'dictionary/dictionary'
+import { sendReservations } from 'api/fetchReservations'
 import { useHistory } from 'react-router-dom'
+import { useReservationValidation } from 'utils/useReservationValidation'
 
 const { reservationModal } = dictionary
 
@@ -28,21 +29,16 @@ const ReservationModal: FC<IProps> = ({
 	const [firstName, setFirstName] = useState('')
 	const [lastName, setLastName] = useState('')
 	const [submitSuccessful, setSubmitSuccessful] = useState(false)
-	const [validationErrorMessage, setValidationErrorMessage] = useState('')
 	const [isSubmitting, setIsSubmitting] = useState(false)
+	const { validationErrorMessage, setValidationErrorMessage, validateForm } =
+		useReservationValidation()
 
 	const handleFormSubmit = async (e: FormEvent) => {
 		e.preventDefault()
-		const pattern = /^[a-zA-Z\s]*$/
-		const isFirstNameValid = pattern.test(firstName)
-		const isLastNameValid = pattern.test(lastName)
+		const isFormValid = validateForm(firstName, lastName)
 
-		if (!isFirstNameValid || !isLastNameValid) {
-			setValidationErrorMessage(reservationModal.validateChars)
-		} else if (firstName.length > 20 || lastName.length > 20) {
-			setValidationErrorMessage(reservationModal.validateLenght)
-		} else if (!firstName || !lastName) {
-			setValidationErrorMessage(reservationModal.validateRequired)
+		if (!isFormValid) {
+			return
 		} else {
 			const formData = new FormData()
 			formData.append('route', `${origin}-${destination}`)
@@ -55,10 +51,7 @@ const ReservationModal: FC<IProps> = ({
 
 			setIsSubmitting(true)
 			try {
-				await axios.post('/api/reservations', formData, {
-					headers: { 'Content-Type': 'multipart/form-data' },
-				})
-
+				await sendReservations(formData)
 				setIsSubmitting(false)
 				setSubmitSuccessful(true)
 			} catch {

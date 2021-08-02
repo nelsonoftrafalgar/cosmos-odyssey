@@ -1,20 +1,12 @@
 import { useEffect, useState } from 'react'
 
+import { IReservationHistoryItem } from 'api/types'
 import Loader from 'components/Loader'
-import axios from 'axios'
 import { dictionary } from 'dictionary/dictionary'
+import { fetchReservationHistory } from 'api/fetchReservationHistory'
 import { useHistory } from 'react-router-dom'
 
 const { reservationHistory: dict } = dictionary
-
-interface IReservationHistoryItem {
-	companyName: string
-	firstName: string
-	lastName: string
-	price: string
-	route: string
-	travelTime: string
-}
 
 const ReservationHistory = () => {
 	const history = useHistory()
@@ -25,8 +17,8 @@ const ReservationHistory = () => {
 	useEffect(() => {
 		const getReservationHistory = async () => {
 			try {
-				const response = await axios.get<IReservationHistoryItem[]>('/api/reservationHistory')
-				setReservationHistory(response.data.reverse())
+				const history = await fetchReservationHistory()
+				setReservationHistory(history)
 			} catch {
 				history.replace('/error')
 			}

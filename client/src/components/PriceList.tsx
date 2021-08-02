@@ -1,64 +1,17 @@
-import { CellProps, useFilters, useSortBy, useTable } from 'react-table'
+import { CellProps, Column, useFilters, useSortBy, useTable } from 'react-table'
 import { FC, useEffect, useMemo, useState } from 'react'
+import { ICellValues, IParams, IPriceListState, ITableColumns } from 'api/types'
 import { Redirect, useHistory, useParams } from 'react-router-dom'
 
 import Loader from 'components/Loader'
 import RefreshModal from 'components/RefreshModal'
 import ReservationModal from 'components/ReservationModal'
-import axios from 'axios'
 import { dictionary } from 'dictionary/dictionary'
+import { fetchPriceList } from 'api/fetchPriceList'
+import { getPriceListTableData } from 'utils/getPriceListTableData'
 import { travelRoutes } from 'api/travelRoutes'
 
 const { priceList: dict } = dictionary
-
-interface ILeg {
-	id: string
-	routeInfo: {
-		id: string
-		from: {
-			id: string
-			name: string
-		}
-		to: {
-			id: string
-			name: string
-		}
-		distance: number
-	}
-	providers: {
-		id: string
-		company: {
-			id: string
-			name: string
-		}
-		price: number
-		flightStart: string
-		flightEnd: string
-	}[]
-}
-
-interface IPriceList {
-	id: string
-	validUntil: string
-	legs: ILeg[]
-}
-
-export interface IParams {
-	origin: string
-	destination: string
-}
-
-export interface ICellValues {
-	companyName: string
-	price: number
-	travelTime: number
-}
-
-interface IPriceListState {
-	selectedLeg: ILeg | null
-	validUntil: string
-	priceListId: string
-}
 
 interface IProps {
 	origin: string
@@ -72,53 +25,21 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 	const [displayRefreshModal, setDisplayRefreshModal] = useState(false)
 
 	useEffect(() => {
-		const fetchPriceList = async () => {
+		const getPriceList = async () => {
 			try {
-				const response = await axios.get<IPriceList>('/api/priceList')
-				const selectedLeg =
-					response.data.legs.find(({ routeInfo: { from, to } }) => {
-						return from.name === origin && to.name === destination
-					}) || null
-
-				const { validUntil, id: priceListId } = response.data
+				const { selectedLeg, validUntil, priceListId } = await fetchPriceList(origin, destination)
 				setPriceList({ selectedLeg, validUntil, priceListId })
 			} catch {
 				history.replace('/error')
 			}
 		}
 
-		fetchPriceList()
+		getPriceList()
 	}, [origin, destination, history])
 
-	const data =
-		useMemo(
-			() =>
-				priceList?.selectedLeg?.providers.map((provider) => ({
-					companyName: provider.company.name,
-					price: provider.price,
-					distance: priceList?.selectedLeg?.routeInfo.distance,
-					travelTime: Math.round(
-						+(
-							(new Date(provider.flightEnd).getTime() - new Date(provider.flightStart).getTime()) /
-							(1000 * 60 * 60 * 24)
-						)
-					),
-				})),
-			[priceList?.selectedLeg?.providers, priceList?.selectedLeg?.routeInfo.distance]
-		) || []
+	const data = useMemo(() => getPriceListTableData(priceList), [priceList]) || []
 
-	const CompanyFilter = (props: any) => {
-		const { filterValue, setFilter } = props.column
-		return (
-			<input
-				value={filterValue || ''}
-				onChange={(e) => setFilter(e.target.value || undefined)}
-				placeholder='Filter company'
-				className='price-list-company-filter'
-			/>
-		)
-	}
-	const columns: any = useMemo(() => {
+	const columns = useMemo<Column<ITableColumns>[]>(() => {
 		const handleBooking = (companyName: string, price: number, travelTime: number) => () => {
 			if (new Date(priceList?.validUntil || '') < new Date()) setDisplayRefreshModal(true)
 			else
@@ -132,7 +53,17 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 			{
 				Header: dict.company,
 				accessor: 'companyName',
-				Filter: CompanyFilter,
+				Filter: (props) => {
+					const { filterValue, setFilter } = props.column
+					return (
+						<input
+							value={filterValue || ''}
+							onChange={(e) => setFilter(e.target.value || undefined)}
+							placeholder={dict.filterCompanyPlaceholder}
+							className='price-list-company-filter'
+						/>
+					)
+				},
 				disableSortBy: true,
 			},
 			{
@@ -192,7 +123,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 				<thead>
 					{headerGroups.map((headerGroup) => (
 						<tr {...headerGroup.getHeaderGroupProps()}>
-							{headerGroup.headers.map((column: any) => (
+							{headerGroup.headers.map((column) => (
 								<th {...column.getHeaderProps(column.getSortByToggleProps())}>
 									{column.render('Header')}
 									<span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
@@ -229,7 +160,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 	)
 }
 
-const withParamsValidation = (Component: any) => () => {
+const withParamsValidation = (Component: FC<IProps>) => () => {
 	const { origin, destination } = useParams<IParams>()
 	const validParams = origin in travelRoutes && destination in travelRoutes
 	return validParams ? <Component origin={origin} destination={destination} /> : <Redirect to='/' />

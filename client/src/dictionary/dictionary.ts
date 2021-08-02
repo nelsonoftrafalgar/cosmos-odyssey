@@ -10,6 +10,7 @@ export const dictionary = {
 	priceList: {
 		title: 'Price list',
 		company: 'Company',
+		filterCompanyPlaceholder: 'Filter company',
 		price: 'Price',
 		distance: 'Distance',
 		travelTime: 'Travel time',
