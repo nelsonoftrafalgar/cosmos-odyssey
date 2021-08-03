@@ -3,8 +3,7 @@ import os
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
-
-print('environment', os.environ.get('FLASK_ENV'))
+from cerberus import Validator
 
 app = Flask(__name__, static_folder='client/build', static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/postgres' if os.environ.get(
@@ -60,6 +59,7 @@ class Reservations(db.Model):
 def price_list():
     url = 'https://cosmos-odyssey.azurewebsites.net/api/v1.0/TravelPrices'
     response = requests.get(url)
+    response.raise_for_status()
     data = response.json()
     count = PriceLists.query.count()
     item = PriceLists.query.filter_by(identifier=data['id']).first()
@@ -80,18 +80,27 @@ def price_list():
 
 @app.route('/api/reservations', methods=['POST'])
 def reservations():
+    first_name = request.form.get('firstName')
+    last_name = request.form.get('lastName')
+    schema = {'firstName': {'type': 'string', 'required': True, 'maxlength': 20, 'regex': '[a-zA-Z\s]+$'},
+              'lastName': {'type': 'string', 'required': True, 'maxlength': 20, 'regex': '[a-zA-Z\s]+$'}}
+    v = Validator(schema)
+    is_valid = v.validate({'firstName': first_name, 'lastName': last_name})
+    if not is_valid:
+        return jsonify({'status': 'error'}), 400
+
     entry = Reservations(*request.form.values())
     db.session.add(entry)
     db.session.commit()
-    return jsonify(success=True)
+    return jsonify({'status': 'ok'})
 
 
 @app.route('/api/reservationHistory')
 def reservationHistory():
-    reservations = Reservations.query.join(PriceLists,
-                                           Reservations.identifier == PriceLists.identifier).all()
-    expired_reservations = Reservations.query.join(PriceLists,
-                                                   Reservations.identifier == PriceLists.identifier, isouter=True).filter(PriceLists.identifier == None).all()
+    reservations = Reservations.query.join(
+        PriceLists, Reservations.identifier == PriceLists.identifier).all()
+    expired_reservations = Reservations.query.join(
+        PriceLists, Reservations.identifier == PriceLists.identifier, isouter=True).filter(PriceLists.identifier == None).all()
     for i in expired_reservations:
         db.session.delete(i)
     db.session.commit()
