@@ -23,7 +23,7 @@ const RouteSelect = () => {
 	return (
 		<div className='route-select-wrapper'>
 			<h1 className='route-select-title'>{routeSelect.title}</h1>
-			<select className='route-select' onChange={handleChangeOrigin}>
+			<select data-testid='ORIGIN-SELECT' className='route-select' onChange={handleChangeOrigin}>
 				<option value=''>{routeSelect.selectOrigin}</option>
 				{Object.keys(travelRoutes).map((item) => (
 					<option key={item} value={item}>
@@ -32,7 +32,11 @@ const RouteSelect = () => {
 				))}
 			</select>
 			{origin && (
-				<select className='route-select' onChange={(e) => setDestination(e.currentTarget.value)}>
+				<select
+					data-testid='DESTINATION-SELECT'
+					className='route-select'
+					onChange={(e) => setDestination(e.currentTarget.value)}
+				>
 					<option value=''>{routeSelect.selectDestination}</option>
 					{travelRoutes[origin].map((item) => (
 						<option key={item} value={item}>
@@ -42,7 +46,11 @@ const RouteSelect = () => {
 				</select>
 			)}
 			{origin && destination && (
-				<button onClick={handleSubmitRoute} className='route-select-button'>
+				<button
+					data-testid='SUBMIT-BUTTON'
+					onClick={handleSubmitRoute}
+					className='route-select-button'
+				>
 					{routeSelect.submit}
 				</button>
 			)}
