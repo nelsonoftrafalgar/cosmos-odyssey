@@ -54,8 +54,13 @@ const ReservationModal: FC<IProps> = ({
 				await sendReservations(formData)
 				setIsSubmitting(false)
 				setSubmitSuccessful(true)
-			} catch {
-				history.replace('/error')
+			} catch (error) {
+				if (error.message.includes('409')) {
+					setValidationErrorMessage('Reservation already exists')
+					setIsSubmitting(false)
+				} else {
+					history.replace('/error')
+				}
 			}
 		}
 	}

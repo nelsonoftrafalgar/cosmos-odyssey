@@ -31,36 +31,6 @@ export const mockLeg = {
 	],
 }
 
-export const mockHistoryResponse = [
-	{
-		companyName: 'SpaceX',
-		firstName: 'sdfsdfh',
-		identifier: 'a95fc5cd-4363-41c5-a412-7e57eeb18841',
-		lastName: 'dsfhsdh',
-		price: '31447.03',
-		route: 'Venus-Mercury',
-		travelTime: '6',
-	},
-	{
-		companyName: 'Explore Dynamite',
-		firstName: 'sgs',
-		identifier: '8a595923-2eac-44a9-858a-139430e7de98',
-		lastName: 'sdfhs',
-		price: '186.6',
-		route: 'Venus-Earth',
-		travelTime: '6',
-	},
-	{
-		companyName: 'Explore Origin',
-		firstName: 'test',
-		identifier: 'dbe9e4a8-884e-461a-abe4-01e73f6af02e',
-		lastName: 'test',
-		price: '118627.15',
-		route: 'Mars-Venus',
-		travelTime: '2',
-	},
-]
-
 export const mockHistory = [
 	{
 		companyName: 'Explore Origin',
