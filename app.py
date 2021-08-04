@@ -89,7 +89,19 @@ def reservations():
     if not is_valid:
         return jsonify({'status': 'error'}), 400
 
-    entry = Reservations(*request.form.values())
+    identifier = request.form.get('priceListId')
+    route = request.form.get('route')
+    price = request.form.get('price')
+    travelTime = request.form.get('travelTime')
+    companyName = request.form.get('companyName')
+
+    entry_exists = Reservations.query.filter(Reservations.identifier == identifier, Reservations.route == route, Reservations.price == price, Reservations.travelTime ==
+                                             travelTime, Reservations.companyName == companyName, Reservations.firstName == first_name, Reservations.lastName == last_name).first()
+    if entry_exists:
+        return jsonify({'status': 'error'}), 409
+
+    entry = Reservations(identifier=identifier, route=route, price=price, travelTime=travelTime,
+                         companyName=companyName, firstName=first_name, lastName=last_name)
     db.session.add(entry)
     db.session.commit()
     return jsonify({'status': 'ok'})
