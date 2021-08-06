@@ -2,12 +2,20 @@ table {
 	border-spacing: 0;
 	border: 1px solid $grey;
 	border-bottom: 0;
+	width: 100%;
 
 	tr {
-		:last-child {
-			td {
+		display: flex;
+		flex-direction: column;
+
+		@media screen and (max-width: calc(#{$breakpoint-sm} - 1px)) {
+			td:not(:last-child) {
 				border-bottom: 0;
 			}
+		}
+
+		@media screen and (min-width: $breakpoint-sm) {
+			display: table-row;
 		}
 	}
 
@@ -15,11 +23,20 @@ table {
 	td {
 		padding: 0.5rem;
 		border-bottom: 1px solid $grey;
-		border-right: 1px solid $grey;
 		color: $light-violet;
+
+		@media screen and (min-width: $breakpoint-sm) {
+			border-right: 1px solid $grey;
+		}
 
 		&:last-child {
 			border-right: 0;
+		}
+	}
+
+	@media screen and (max-width: calc(#{$breakpoint-sm} - 1px)) {
+		.reservation-header {
+			display: none;
 		}
 	}
 }

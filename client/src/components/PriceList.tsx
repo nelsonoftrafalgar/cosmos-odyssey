@@ -124,7 +124,10 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 					{headerGroups.map((headerGroup) => (
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{headerGroup.headers.map((column) => (
-								<th {...column.getHeaderProps(column.getSortByToggleProps())}>
+								<th
+									className={column.Header === dict.makeReservation ? 'reservation-header' : ''}
+									{...column.getHeaderProps(column.getSortByToggleProps())}
+								>
 									{column.render('Header')}
 									<span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
 									<div>{column.canFilter ? column.render('Filter') : null}</div>
