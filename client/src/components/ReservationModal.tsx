@@ -28,8 +28,8 @@ const ReservationModal: FC<IProps> = ({
 	priceListId,
 }) => {
 	const history = useHistory()
-	const [first_name, setfirst_name] = useState('')
-	const [last_name, setlast_name] = useState('')
+	const [first_name, setFirstName] = useState('')
+	const [last_name, setLastName] = useState('')
 	const [submitSuccessful, setSubmitSuccessful] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const { validationErrorMessage, setValidationErrorMessage, validateForm } =
@@ -72,12 +72,12 @@ const ReservationModal: FC<IProps> = ({
 
 	const handlefirst_nameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (validationErrorMessage) setValidationErrorMessage('')
-		setfirst_name(e.currentTarget.value)
+		setFirstName(e.currentTarget.value)
 	}
 
 	const handlelast_nameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (validationErrorMessage) setValidationErrorMessage('')
-		setlast_name(e.currentTarget.value)
+		setLastName(e.currentTarget.value)
 	}
 
 	return (
