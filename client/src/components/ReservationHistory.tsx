@@ -4,6 +4,7 @@ import { IReservationHistoryItem } from 'api/types'
 import Loader from 'components/Loader'
 import { dictionary } from 'dictionary/dictionary'
 import { fetchReservationHistory } from 'api/fetchReservationHistory'
+import { useCancelToken } from 'utils/useCancelToken'
 import { useHistory } from 'react-router-dom'
 
 const { reservationHistory: dict } = dictionary
@@ -13,19 +14,22 @@ const ReservationHistory = () => {
 	const [reservationHistory, setReservationHistory] = useState<IReservationHistoryItem[] | null>(
 		null
 	)
+	const { newCancelToken, isCancel } = useCancelToken()
 
 	useEffect(() => {
 		const getReservationHistory = async () => {
 			try {
-				const history = await fetchReservationHistory()
+				const cancelToken = newCancelToken()
+				const history = await fetchReservationHistory(cancelToken)
 				setReservationHistory(history)
-			} catch {
+			} catch (error) {
+				if (isCancel(error)) return
 				history.replace('/error')
 			}
 		}
 
 		getReservationHistory()
-	}, [history])
+	}, [history, newCancelToken, isCancel])
 
 	if (!reservationHistory) {
 		return <Loader />

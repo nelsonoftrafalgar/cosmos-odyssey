@@ -1,7 +1,10 @@
-import { IReservationHistoryItem } from './types'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 
-export const fetchReservationHistory = async () => {
-	const response = await axios.get<IReservationHistoryItem[]>('/api/reservationHistory')
-	return response.data
+import { IReservationHistoryItem } from 'api/types'
+
+export const fetchReservationHistory = async (cancelToken: CancelToken) => {
+	const { data } = await axios.get<IReservationHistoryItem[]>('/api/reservationHistory', {
+		cancelToken,
+	})
+	return data
 }

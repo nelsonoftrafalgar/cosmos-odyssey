@@ -4,7 +4,8 @@ import { ICellValues } from 'api/types'
 import Loader from 'components/Loader'
 import axios from 'axios'
 import { dictionary } from 'dictionary/dictionary'
-import { sendReservations } from 'api/fetchReservations'
+import { sendReservations } from 'api/sendReservations'
+import { useCancelToken } from 'utils/useCancelToken'
 import { useHistory } from 'react-router-dom'
 import { useReservationValidation } from 'utils/useReservationValidation'
 
@@ -33,6 +34,7 @@ const ReservationModal: FC<IProps> = ({
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const { validationErrorMessage, setValidationErrorMessage, validateForm } =
 		useReservationValidation()
+	const { newCancelToken, isCancel } = useCancelToken()
 
 	const handleFormSubmit = async (e: FormEvent) => {
 		e.preventDefault()
@@ -52,10 +54,12 @@ const ReservationModal: FC<IProps> = ({
 
 			setIsSubmitting(true)
 			try {
-				await sendReservations(formData)
+				const cancelToken = newCancelToken()
+				await sendReservations(formData, cancelToken)
 				setIsSubmitting(false)
 				setSubmitSuccessful(true)
 			} catch (error) {
+				if (isCancel(error)) return
 				if (axios.isAxiosError(error) && error.message.includes('409')) {
 					setValidationErrorMessage('Reservation already exists')
 					setIsSubmitting(false)

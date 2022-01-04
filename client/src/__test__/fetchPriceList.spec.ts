@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { fetchPriceList } from 'api/fetchPriceList'
 import { mockLeg } from 'mocks/mockData'
 
@@ -8,6 +9,7 @@ const mockResponse = {
 }
 
 test('it should fetch and parse price list from api', async () => {
-	const response = await fetchPriceList('Neptune', 'Mercury')
+	const mockCancelToken = axios.CancelToken.source()
+	const response = await fetchPriceList('Neptune', 'Mercury', mockCancelToken.token)
 	expect(response).toMatchObject(mockResponse)
 })

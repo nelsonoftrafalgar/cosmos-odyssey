@@ -10,6 +10,7 @@ import { dictionary } from 'dictionary/dictionary'
 import { fetchPriceList } from 'api/fetchPriceList'
 import { getPriceListTableData } from 'utils/getPriceListTableData'
 import { travelRoutes } from 'api/travelRoutes'
+import { useCancelToken } from 'utils/useCancelToken'
 
 const { priceList: dict } = dictionary
 
@@ -23,19 +24,26 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 	const [priceList, setPriceList] = useState<IPriceListState | null>(null)
 	const [reservation, setReservation] = useState<ICellValues | null>(null)
 	const [displayRefreshModal, setDisplayRefreshModal] = useState(false)
+	const { newCancelToken, isCancel } = useCancelToken()
 
 	useEffect(() => {
 		const getPriceList = async () => {
 			try {
-				const { selectedLeg, validUntil, priceListId } = await fetchPriceList(origin, destination)
+				const cancelToken = newCancelToken()
+				const { selectedLeg, validUntil, priceListId } = await fetchPriceList(
+					origin,
+					destination,
+					cancelToken
+				)
 				setPriceList({ selectedLeg, validUntil, priceListId })
-			} catch {
+			} catch (error) {
+				if (isCancel(error)) return
 				history.replace('/error')
 			}
 		}
 
 		getPriceList()
-	}, [origin, destination, history])
+	}, [origin, destination, history, newCancelToken, isCancel])
 
 	const data = useMemo(() => getPriceListTableData(priceList), [priceList]) || []
 
