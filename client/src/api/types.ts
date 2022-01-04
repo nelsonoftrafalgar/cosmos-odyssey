@@ -36,9 +36,9 @@ export interface IParams {
 }
 
 export interface ICellValues {
-	companyName: string
+	company_name: string
 	price: number
-	travelTime: number
+	travel_time: number
 }
 
 export interface IPriceListState {
@@ -48,12 +48,12 @@ export interface IPriceListState {
 }
 
 export interface IReservationHistoryItem {
-	companyName: string
-	firstName: string
-	lastName: string
+	company_name: string
+	first_name: string
+	last_name: string
 	price: string
 	route: string
-	travelTime: string
+	travel_time: string
 }
 
 export interface ITableColumns extends ICellValues {

@@ -6,18 +6,18 @@ const { reservationModal } = dictionary
 export const useReservationValidation = () => {
 	const [validationErrorMessage, setValidationErrorMessage] = useState('')
 
-	const validateForm = (firstName: string, lastName: string) => {
+	const validateForm = (first_name: string, last_name: string) => {
 		const pattern = /^[a-zA-Z\s]*$/
-		const isFirstNameValid = pattern.test(firstName)
-		const isLastNameValid = pattern.test(lastName)
+		const isfirst_nameValid = pattern.test(first_name)
+		const islast_nameValid = pattern.test(last_name)
 
-		if (!isFirstNameValid || !isLastNameValid) {
+		if (!isfirst_nameValid || !islast_nameValid) {
 			setValidationErrorMessage(reservationModal.validateChars)
 			return false
-		} else if (firstName.length > 20 || lastName.length > 20) {
+		} else if (first_name.length > 20 || last_name.length > 20) {
 			setValidationErrorMessage(reservationModal.validateLenght)
 			return false
-		} else if (!firstName || !lastName) {
+		} else if (!first_name || !last_name) {
 			setValidationErrorMessage(reservationModal.validateRequired)
 			return false
 		} else {

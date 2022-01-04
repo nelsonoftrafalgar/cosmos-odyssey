@@ -2,6 +2,7 @@ import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from '
 
 import { ICellValues } from 'api/types'
 import Loader from 'components/Loader'
+import axios from 'axios'
 import { dictionary } from 'dictionary/dictionary'
 import { sendReservations } from 'api/fetchReservations'
 import { useHistory } from 'react-router-dom'
@@ -17,17 +18,17 @@ interface IProps extends ICellValues {
 }
 
 const ReservationModal: FC<IProps> = ({
-	companyName,
+	company_name,
 	price,
-	travelTime,
+	travel_time,
 	closeModal,
 	origin,
 	destination,
 	priceListId,
 }) => {
 	const history = useHistory()
-	const [firstName, setFirstName] = useState('')
-	const [lastName, setLastName] = useState('')
+	const [first_name, setfirst_name] = useState('')
+	const [last_name, setlast_name] = useState('')
 	const [submitSuccessful, setSubmitSuccessful] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const { validationErrorMessage, setValidationErrorMessage, validateForm } =
@@ -35,7 +36,7 @@ const ReservationModal: FC<IProps> = ({
 
 	const handleFormSubmit = async (e: FormEvent) => {
 		e.preventDefault()
-		const isFormValid = validateForm(firstName, lastName)
+		const isFormValid = validateForm(first_name, last_name)
 
 		if (!isFormValid) {
 			return
@@ -43,10 +44,10 @@ const ReservationModal: FC<IProps> = ({
 			const formData = new FormData()
 			formData.append('route', `${origin}-${destination}`)
 			formData.append('price', `${price}`)
-			formData.append('travelTime', `${travelTime}`)
-			formData.append('companyName', companyName)
-			formData.append('firstName', firstName)
-			formData.append('lastName', lastName)
+			formData.append('travel_time', `${travel_time}`)
+			formData.append('company_name', company_name)
+			formData.append('first_name', first_name)
+			formData.append('last_name', last_name)
 			formData.append('priceListId', priceListId)
 
 			setIsSubmitting(true)
@@ -55,7 +56,7 @@ const ReservationModal: FC<IProps> = ({
 				setIsSubmitting(false)
 				setSubmitSuccessful(true)
 			} catch (error) {
-				if (error.message.includes('409')) {
+				if (axios.isAxiosError(error) && error.message.includes('409')) {
 					setValidationErrorMessage('Reservation already exists')
 					setIsSubmitting(false)
 				} else {
@@ -65,14 +66,14 @@ const ReservationModal: FC<IProps> = ({
 		}
 	}
 
-	const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+	const handlefirst_nameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (validationErrorMessage) setValidationErrorMessage('')
-		setFirstName(e.currentTarget.value)
+		setfirst_name(e.currentTarget.value)
 	}
 
-	const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+	const handlelast_nameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (validationErrorMessage) setValidationErrorMessage('')
-		setLastName(e.currentTarget.value)
+		setlast_name(e.currentTarget.value)
 	}
 
 	return (
@@ -94,17 +95,17 @@ const ReservationModal: FC<IProps> = ({
 								{reservationModal.price}: <span>{price}</span>
 							</p>
 							<p className='reservation-modal-details'>
-								{reservationModal.travelTime}: <span>{travelTime} days</span>
+								{reservationModal.travelTime}: <span>{travel_time} days</span>
 							</p>
 							<p className='reservation-modal-details'>
-								{reservationModal.company}: <span>{companyName}</span>
+								{reservationModal.company}: <span>{company_name}</span>
 							</p>
 							<form onSubmit={handleFormSubmit} className='reservation-form'>
 								<label>
 									<input
 										className='reservation-modal-input'
-										onChange={handleFirstNameChange}
-										value={firstName}
+										onChange={handlefirst_nameChange}
+										value={first_name}
 										placeholder={reservationModal.firstName}
 										type='text'
 									/>
@@ -112,8 +113,8 @@ const ReservationModal: FC<IProps> = ({
 								<label>
 									<input
 										className='reservation-modal-input'
-										onChange={handleLastNameChange}
-										value={lastName}
+										onChange={handlelast_nameChange}
+										value={last_name}
 										placeholder={reservationModal.lastName}
 										type='text'
 									/>

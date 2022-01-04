@@ -40,19 +40,19 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 	const data = useMemo(() => getPriceListTableData(priceList), [priceList]) || []
 
 	const columns = useMemo<Column<ITableColumns>[]>(() => {
-		const handleBooking = (companyName: string, price: number, travelTime: number) => () => {
+		const handleBooking = (company_name: string, price: number, travel_time: number) => () => {
 			if (new Date(priceList?.validUntil || '') < new Date()) setDisplayRefreshModal(true)
 			else
 				setReservation({
-					companyName,
+					company_name,
 					price,
-					travelTime,
+					travel_time,
 				})
 		}
 		return [
 			{
 				Header: dict.company,
-				accessor: 'companyName',
+				accessor: 'company_name',
 				Filter: (props) => {
 					const { filterValue, setFilter } = props.column
 					return (
@@ -78,7 +78,7 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 			},
 			{
 				Header: dict.travelTime,
-				accessor: 'travelTime',
+				accessor: 'travel_time',
 				disableFilters: true,
 			},
 			{
@@ -87,13 +87,13 @@ const PriceList: FC<IProps> = ({ origin, destination }) => {
 				disableSortBy: true,
 				Cell: ({
 					row: {
-						values: { companyName, price, travelTime },
+						values: { company_name, price, travel_time },
 					},
 				}: CellProps<ICellValues>) => {
 					return (
 						<button
 							className='price-list-book-btn'
-							onClick={handleBooking(companyName, price, travelTime)}
+							onClick={handleBooking(company_name, price, travel_time)}
 						>
 							{dict.book}
 						</button>
