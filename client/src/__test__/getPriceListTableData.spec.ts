@@ -8,9 +8,9 @@ const mockPriceListSate = {
 }
 
 const mockTableData = [
-	{ company_name: 'Space Piper', price: 721791.84, distance: 4443090000, travel_time: 1 },
-	{ company_name: 'Space Odyssey', price: 2859639.39, distance: 4443090000, travel_time: 5 },
-	{ company_name: 'Explore Dynamite', price: 3366347.33, distance: 4443090000, travel_time: 2 },
+	{ companyName: 'Space Piper', price: 721791.84, distance: 4443090000, travelTime: 1 },
+	{ companyName: 'Space Odyssey', price: 2859639.39, distance: 4443090000, travelTime: 5 },
+	{ companyName: 'Explore Dynamite', price: 3366347.33, distance: 4443090000, travelTime: 2 },
 ]
 
 test('it should extract table data from price list', () => {

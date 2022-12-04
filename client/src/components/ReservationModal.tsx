@@ -19,17 +19,17 @@ interface IProps extends ICellValues {
 }
 
 const ReservationModal: FC<IProps> = ({
-	company_name,
+	companyName,
 	price,
-	travel_time,
+	travelTime,
 	closeModal,
 	origin,
 	destination,
 	priceListId,
 }) => {
 	const history = useHistory()
-	const [first_name, setFirstName] = useState('')
-	const [last_name, setLastName] = useState('')
+	const [firstName, setFirstName] = useState('')
+	const [lastName, setLastName] = useState('')
 	const [submitSuccessful, setSubmitSuccessful] = useState(false)
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const { validationErrorMessage, setValidationErrorMessage, validateForm } =
@@ -38,7 +38,7 @@ const ReservationModal: FC<IProps> = ({
 
 	const handleFormSubmit = async (e: FormEvent) => {
 		e.preventDefault()
-		const isFormValid = validateForm(first_name, last_name)
+		const isFormValid = validateForm(firstName, lastName)
 
 		if (!isFormValid) {
 			return
@@ -46,10 +46,10 @@ const ReservationModal: FC<IProps> = ({
 			const formData = new FormData()
 			formData.append('route', `${origin}-${destination}`)
 			formData.append('price', `${price}`)
-			formData.append('travel_time', `${travel_time}`)
-			formData.append('company_name', company_name)
-			formData.append('first_name', first_name)
-			formData.append('last_name', last_name)
+			formData.append('travelTime', `${travelTime}`)
+			formData.append('companyName', companyName)
+			formData.append('firstName', firstName)
+			formData.append('lastName', lastName)
 			formData.append('priceListId', priceListId)
 
 			setIsSubmitting(true)
@@ -70,12 +70,12 @@ const ReservationModal: FC<IProps> = ({
 		}
 	}
 
-	const handlefirst_nameChange = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (validationErrorMessage) setValidationErrorMessage('')
 		setFirstName(e.currentTarget.value)
 	}
 
-	const handlelast_nameChange = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (validationErrorMessage) setValidationErrorMessage('')
 		setLastName(e.currentTarget.value)
 	}
@@ -99,17 +99,17 @@ const ReservationModal: FC<IProps> = ({
 								{reservationModal.price}: <span>{price}</span>
 							</p>
 							<p className='reservation-modal-details'>
-								{reservationModal.travelTime}: <span>{travel_time} days</span>
+								{reservationModal.travelTime}: <span>{travelTime} days</span>
 							</p>
 							<p className='reservation-modal-details'>
-								{reservationModal.company}: <span>{company_name}</span>
+								{reservationModal.company}: <span>{companyName}</span>
 							</p>
 							<form onSubmit={handleFormSubmit} className='reservation-form'>
 								<label>
 									<input
 										className='reservation-modal-input'
-										onChange={handlefirst_nameChange}
-										value={first_name}
+										onChange={handleFirstNameChange}
+										value={firstName}
 										placeholder={reservationModal.firstName}
 										type='text'
 									/>
@@ -117,8 +117,8 @@ const ReservationModal: FC<IProps> = ({
 								<label>
 									<input
 										className='reservation-modal-input'
-										onChange={handlelast_nameChange}
-										value={last_name}
+										onChange={handleLastNameChange}
+										value={lastName}
 										placeholder={reservationModal.lastName}
 										type='text'
 									/>

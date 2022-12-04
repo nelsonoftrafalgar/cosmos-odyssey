@@ -41,13 +41,13 @@ const ReservationHistory = () => {
 			{reservationHistory.map((item, id) => (
 				<div key={id} className='reservation-history-item'>
 					<p className='reservation-history-details'>
-						{dict.firstName}: <span>{item.first_name}</span>
+						{dict.firstName}: <span>{item.firstName}</span>
 					</p>
 					<p className='reservation-history-details'>
-						{dict.lastName}: <span>{item.last_name}</span>
+						{dict.lastName}: <span>{item.lastName}</span>
 					</p>
 					<p className='reservation-history-details'>
-						{dict.company}: <span>{item.company_name}</span>
+						{dict.company}: <span>{item.companyName}</span>
 					</p>
 					<p className='reservation-history-details'>
 						{dict.route}: <span>{item.route}</span>
@@ -56,7 +56,7 @@ const ReservationHistory = () => {
 						{dict.price}: <span>{item.price}</span>
 					</p>
 					<p className='reservation-history-details'>
-						{dict.travelTime}: <span>{item.travel_time + ' days'}</span>
+						{dict.travelTime}: <span>{item.travelTime + ' days'}</span>
 					</p>
 				</div>
 			))}
